@@ -1,6 +1,6 @@
 # plasmoid
 
-A Clojure library designed to ... well, that part is up to you.
+Trivial Clojure pet project
 
 ## Usage
 
