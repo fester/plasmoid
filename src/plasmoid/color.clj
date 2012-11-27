@@ -8,6 +8,9 @@
 (defn awt-color [[r g b]]
   (Color. r g b))
 
+(defn int-color [c]
+  (.getRGB (awt-color c)))
+
 (defn random-color []
   (apply color (for [_ (range 3)] (rand-int 255))))
 
