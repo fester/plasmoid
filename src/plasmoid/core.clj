@@ -37,7 +37,6 @@
   (- (* (rand) limit) (/ limit 2.0)))
 
 (defn area [[left top] [right bottom]]
-  (println left top right bottom)
   (* (- right left)
      (- bottom top)))
 
@@ -47,11 +46,11 @@
 (defn plasma 
   ([width height]
   "Generate diamond square fractal plasma on a rectangle of givend width/height."
-  (plasma '(0 0) (list width height) (repeatedly 4 rand)))
+  (plasma '(0 0) [width height] (repeatedly 4 rand)))
 
   ([[left top :as a] [right bottom :as b] [color1 color2 color3 color4]]
-  ((if (area-small? a b)
-     [[left top] color1]
+  (if (area-small? a b)
+     [(map int a) color1]
      (let [center-x (average left right)
            center-y (average top bottom)
            left-color (average color1 color3)
@@ -59,12 +58,14 @@
            top-color (average color1 color2)
            bottom-color (average color3 color4)
            center-color (+ (average left-color right-color top-color bottom-color) (rand1 0.1))]
-       (into {}
-             (plasma '(left top) '(center-x center-y) '(color1 top-color left-color center-color))
-             (plasma '(center-x top) '(right center-y) '(top-color color2 center-color right-color))
-             (plasma '(left center-y) '(center-x bottom) '(left-color center-color color3 bottom-color))
-             (plasma '(center-x center-y) '(right bottom) '(center-color right bottom-color color4))))))))
-                       
+       (conj (plasma [left top] [center-x center-y] [color1 top-color left-color center-color])
+             (plasma [center-x top] [right center-y] [top-color color2 center-color right-color])
+             (plasma [left center-y] [center-x bottom] [left-color center-color color3 bottom-color])
+             (plasma 
+              [center-x center-y] 
+              [right bottom] 
+              [center-color right bottom-color color4])
+             )))))
 
 (defn -main
   [width height]
